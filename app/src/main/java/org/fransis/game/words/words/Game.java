@@ -1,17 +1,18 @@
 package org.fransis.game.words.words;
 
 public class Game {
-    private String alphabet = "abcdefghijklmnñopqrstuvwxyz".toUpperCase();
-    private String secretWord = "Chucrut".toUpperCase();;
-    private int maxTry = 5;
-    private int nTry = 0;
-    private StringBuilder word = null;
-
+    private int maxTry;
+    private int nTry;
+    private StringBuilder word;
     private GameCallback callback = null;
+    private Level current;
 
-    public Game(){
+    public Game(Level level){
+        maxTry = 5;
+        nTry = 0;
+        this.current = level;
         word = new StringBuilder();
-        for (int i= 0; i< secretWord.length(); i++){
+        for (int i= 0; i< current.getSecretWord().length(); i++){
             word.append("_");
         }
     }
@@ -21,7 +22,7 @@ public class Game {
     }
 
     public String getAlphabet(){
-        return alphabet;
+        return current.getAlphabet();
     }
 
     public int getnTry(){
@@ -32,31 +33,44 @@ public class Game {
         if(nTry < maxTry){
             if(word.indexOf(letter) < 0){
                 boolean found = false;
-                int index = secretWord.indexOf(letter);
+                int index = current.getSecretWord().indexOf(letter);
                 while( index >= 0 ) {
                     found = true;
                     word.replace(index, index + 1, letter);
-                    index = secretWord.indexOf(letter, index + 1);
+                    index = current.getSecretWord().indexOf(letter, index + 1);
                 }
                 if(found){
-                    callback.letter(word.toString());
-
+                    if(callback != null)
+                        callback.letter(word.toString());
+                    else
+                        throw new RuntimeException("Callback is null");
                     if(word.indexOf("_") < 0){
                         callback.wellDone();
                     }
                 }else{
                     nTry++;
-                    callback.fail(maxTry - nTry);
+                    if(callback != null)
+                        callback.fail(maxTry - nTry);
+                    else
+                        throw new RuntimeException("Callback is null");
+
                 }
             }
         }
         if(nTry == maxTry){
-            callback.gameOver();
+            if(callback != null)
+                    callback.gameOver();
+            else
+                throw new RuntimeException("Callback is null");
         }
     }
 
     public void setCallback(GameCallback callback) {
-        this.callback = callback;
+        if(callback != null)
+            this.callback = callback;
+        else
+            throw new RuntimeException("Callback is null");
+
     }
 }
 
