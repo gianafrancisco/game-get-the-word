@@ -1,5 +1,6 @@
 package org.fransis.game.words.words;
 
+import android.content.pm.ActivityInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -24,10 +25,14 @@ public class MainActivity extends AppCompatActivity {
     Button btnNextLevel = null;
     GameCallback callback = null;
     LevelRepository levels = null;
+    TextView tvCurrent = null;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_main);
         gridview = (GridView) findViewById(R.id.gridview);
         gridviewResult = (GridView) findViewById(R.id.gridview_result);
@@ -71,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void letter(String word) {
+                tvCurrent.setBackgroundResource(R.drawable.button_good);
                 adapterResult.clear();
                 for (int i = 0; i < word.length(); i++) {
                     adapterResult.add(word.substring(i, i + 1));
@@ -80,15 +86,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void fail(int tryAvailable) {
                 textIntentos.setText(tryAvailable + "");
+                tvCurrent.setBackgroundResource(R.drawable.button_wrong);
             }
         };
 
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                TextView tv = (TextView) v.findViewById(R.id.item_id);
-                tv.setBackgroundResource(R.drawable.button_click);
-                String letter = tv.getText().toString();
+                tvCurrent = (TextView) v.findViewById(R.id.item_id);
+                String letter = tvCurrent.getText().toString();
 
                 myGame.newTry(letter);
 
