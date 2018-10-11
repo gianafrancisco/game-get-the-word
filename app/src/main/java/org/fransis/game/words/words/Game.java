@@ -4,6 +4,7 @@ public class Game {
     private int maxTry;
     private int nTry;
     private StringBuilder word;
+    private StringBuilder letterPressed;
     private GameCallback callback = null;
     private Level current;
 
@@ -11,6 +12,7 @@ public class Game {
         maxTry = 5;
         nTry = 0;
         this.current = level;
+        letterPressed = new StringBuilder();
         word = new StringBuilder();
         for (int i= 0; i< current.getSecretWord().length(); i++){
             word.append("_");
@@ -30,38 +32,41 @@ public class Game {
     }
 
     public void newTry(String letter){
-        if(nTry < maxTry){
-            if(word.indexOf(letter) < 0){
-                boolean found = false;
-                int index = current.getSecretWord().indexOf(letter);
-                while( index >= 0 ) {
-                    found = true;
-                    word.replace(index, index + 1, letter);
-                    index = current.getSecretWord().indexOf(letter, index + 1);
-                }
-                if(found){
-                    if(callback != null)
-                        callback.letter(word.toString());
-                    else
-                        throw new RuntimeException("Callback is null");
-                    if(word.indexOf("_") < 0){
-                        callback.wellDone();
+        if(letterPressed.indexOf(letter) < 0){
+            letterPressed.append(letter);
+            if(nTry < maxTry){
+                if(word.indexOf(letter) < 0){
+                    boolean found = false;
+                    int index = current.getSecretWord().indexOf(letter);
+                    while( index >= 0 ) {
+                        found = true;
+                        word.replace(index, index + 1, letter);
+                        index = current.getSecretWord().indexOf(letter, index + 1);
                     }
-                }else{
-                    nTry++;
-                    if(callback != null)
-                        callback.fail(maxTry - nTry);
-                    else
-                        throw new RuntimeException("Callback is null");
+                    if(found){
+                        if(callback != null)
+                            callback.letter(word.toString());
+                        else
+                            throw new RuntimeException("Callback is null");
+                        if(word.indexOf("_") < 0){
+                            callback.wellDone();
+                        }
+                    }else{
+                        nTry++;
+                        if(callback != null)
+                            callback.fail(maxTry - nTry);
+                        else
+                            throw new RuntimeException("Callback is null");
 
+                    }
                 }
             }
-        }
-        if(nTry == maxTry){
-            if(callback != null)
+            if(nTry == maxTry){
+                if(callback != null)
                     callback.gameOver();
-            else
-                throw new RuntimeException("Callback is null");
+                else
+                    throw new RuntimeException("Callback is null");
+            }
         }
     }
 
