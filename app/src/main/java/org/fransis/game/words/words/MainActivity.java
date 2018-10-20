@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         gridview = (GridView) findViewById(R.id.gridview);
         gridviewResult = (GridView) findViewById(R.id.gridview_result);
-        textIntentos = (TextView) findViewById(R.id.textIntento);
+        //textIntentos = (TextView) findViewById(R.id.textIntento);
         btnVolverIntentar = (Button) findViewById(R.id.btnReintentar);
         btnNextLevel = (Button) findViewById(R.id.btnSiguienteNivel);
         hud = (LinearLayout) findViewById(R.id.hud);
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void letter(String word) {
-                tvCurrent.setBackgroundResource(R.drawable.button_good);
+                tvCurrent.setBackgroundResource(R.drawable.good);
                 adapterResult.clear();
                 for (int i = 0; i < word.length(); i++) {
                     adapterResult.add(word.substring(i, i + 1));
@@ -85,8 +86,9 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void fail(int tryAvailable) {
-                textIntentos.setText(tryAvailable + "");
-                tvCurrent.setBackgroundResource(R.drawable.button_wrong);
+                //textIntentos.setText(tryAvailable + "");
+                tvCurrent.setBackgroundResource(R.drawable.wrong);
+                drawNTry(myGame.getnTry());
             }
         };
 
@@ -103,13 +105,12 @@ public class MainActivity extends AppCompatActivity {
 
         iniciarNivel(levels.getLevel());
 
-
-
     }
 
     private void iniciarNivel(Level level) {
         myGame = new Game(level);
-        textIntentos.setText(myGame.getnTry() + "");
+        //textIntentos.setText(myGame.getnTry() + "");
+        drawNTry(myGame.getnTry());
         hud.setVisibility(View.VISIBLE);
         btnVolverIntentar.setVisibility(View.GONE);
         btnNextLevel.setVisibility(View.GONE);
@@ -127,6 +128,15 @@ public class MainActivity extends AppCompatActivity {
         gridview.setAdapter(adapter);
         gridview.setEnabled(true);
         myGame.setCallback(callback);
+    }
+
+    private void drawNTry(int nTry){
+        hud.removeAllViews();
+        for(int i=0; i < nTry; i++){
+            ImageView heart = new ImageView(this);
+            heart.setImageResource(R.drawable.heart);
+            hud.addView(heart);
+        }
     }
 }
 
