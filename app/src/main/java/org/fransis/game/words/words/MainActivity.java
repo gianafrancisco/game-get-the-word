@@ -4,6 +4,11 @@ import android.content.pm.ActivityInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -15,7 +20,6 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView textIntentos;
     LinearLayout hud;
     ArrayAdapter<String> adapterResult = null;
     ArrayAdapter<String> adapter = null;
@@ -27,17 +31,32 @@ public class MainActivity extends AppCompatActivity {
     GameCallback callback = null;
     LevelRepository levels = null;
     TextView tvCurrent = null;
+    AnimationSet animationIn = null;
+    AnimationSet animationOut = null;
 
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Animation fadeIn = new AlphaAnimation(0, 1);
+        //fadeIn.setInterpolator(new DecelerateInterpolator());
+        fadeIn.setDuration(1000);
+
+        Animation fadeOut = new AlphaAnimation(1, 0);
+        //fadeOut.setInterpolator(new AccelerateInterpolator());
+        fadeOut.setDuration(500);
+
+        animationIn = new AnimationSet(false);
+        animationIn.addAnimation(fadeIn);
+        animationOut = new AnimationSet(false);
+        animationOut.addAnimation(fadeOut);
+
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_main);
         gridview = (GridView) findViewById(R.id.gridview);
         gridviewResult = (GridView) findViewById(R.id.gridview_result);
-        //textIntentos = (TextView) findViewById(R.id.textIntento);
         btnVolverIntentar = (Button) findViewById(R.id.btnReintentar);
         btnNextLevel = (Button) findViewById(R.id.btnSiguienteNivel);
         hud = (LinearLayout) findViewById(R.id.hud);
@@ -86,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void fail(int tryAvailable) {
-                //textIntentos.setText(tryAvailable + "");
                 tvCurrent.setBackgroundResource(R.drawable.wrong);
                 drawNTry(myGame.getnTry());
             }
@@ -131,11 +149,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void drawNTry(int nTry){
-        hud.removeAllViews();
-        for(int i=0; i < nTry; i++){
-            ImageView heart = new ImageView(this);
-            heart.setImageResource(R.drawable.heart);
-            hud.addView(heart);
+        if(hud.getChildCount() > 0){
+            View iv =  hud.getChildAt(nTry);
+            iv.startAnimation(animationOut);
+            hud.removeViewAt(nTry);
+        }else{
+            for(int i=0; i < nTry; i++){
+                ImageView heart = new ImageView(this);
+                heart.setImageResource(R.drawable.heart);
+                hud.addView(heart);
+                heart.startAnimation(animationIn);
+            }
         }
     }
 }
