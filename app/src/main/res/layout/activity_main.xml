@@ -1,79 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="5dp"
-    android:background="@color/vintage_background"
     tools:context=".MainActivity">
 
-    <LinearLayout
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:orientation="horizontal"
-            android:layout_weight="1"
-            android:layout_marginBottom="10dp"
-            >
-            <LinearLayout
-                android:id="@+id/hud"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:layout_weight="1"
-                >
-            </LinearLayout>
+        android:layout_height="match_parent" />
 
-            <Button
-                android:id="@+id/btnReintentar"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/reiniciar_nivel"
-                android:background="@drawable/wrong"
-                android:layout_weight="1"
-                android:visibility="gone"
-                />
-            <Button
-                android:id="@+id/btnSiguienteNivel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/siguiente_nivel"
-                android:background="@drawable/good"
-                android:layout_weight="1"
-                android:visibility="gone"
-                />
-        </LinearLayout>
-        <GridView
-            android:id="@+id/gridview"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:columnWidth="40dp"
-            android:verticalSpacing="5dp"
-            android:horizontalSpacing="5dp"
-            android:stretchMode="none"
-            android:numColumns="auto_fit"
-            android:layout_weight="5"
-            android:gravity="center_vertical|center_horizontal"
-            >
-        </GridView>
-
-        <GridView
-            android:id="@+id/gridview_result"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:columnWidth="40dp"
-            android:verticalSpacing="5dp"
-            android:horizontalSpacing="5dp"
-            android:stretchMode="none"
-            android:numColumns="auto_fit"
-            android:gravity="center_vertical|center_horizontal"
-            android:layout_weight="3"
-            >
-        </GridView>
-
-    </LinearLayout>
-
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

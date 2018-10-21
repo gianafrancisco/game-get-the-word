@@ -3,4 +3,10 @@
     <string name="intentos_disponibles">Intentos disponibles </string>
     <string name="reiniciar_nivel">Volver a intentar</string>
     <string name="siguiente_nivel">Siguiente Palabra</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="iniciar_juego">Nuevo juego</string>
+    <string name="salir">Salir</string>
+    <string name="seguir_jugando">Continuar juego</string>
 </resources>

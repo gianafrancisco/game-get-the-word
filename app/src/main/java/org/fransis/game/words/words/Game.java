@@ -4,7 +4,7 @@ public class Game {
     private int maxTry;
     private int nTry;
     private StringBuilder word;
-    private StringBuilder letterPressed;
+    private StringBuilder charPressed;
     private GameCallback callback = null;
     private Level current;
 
@@ -12,7 +12,7 @@ public class Game {
         maxTry = 5;
         nTry = 0;
         this.current = level;
-        letterPressed = new StringBuilder();
+        charPressed = new StringBuilder();
         word = new StringBuilder();
         for (int i= 0; i< current.getSecretWord().length(); i++){
             word.append("_");
@@ -32,8 +32,8 @@ public class Game {
     }
 
     public void newTry(String letter){
-        if(letterPressed.indexOf(letter) < 0){
-            letterPressed.append(letter);
+        if(charPressed.indexOf(letter) < 0){
+            charPressed.append(letter);
             if(nTry < maxTry){
                 if(word.indexOf(letter) < 0){
                     boolean found = false;
@@ -45,7 +45,7 @@ public class Game {
                     }
                     if(found){
                         if(callback != null)
-                            callback.letter(word.toString());
+                            callback.character(word.toString());
                         else
                             throw new RuntimeException("Callback is null");
                         if(word.indexOf("_") < 0){
