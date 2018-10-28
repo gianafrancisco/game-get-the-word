@@ -71,7 +71,6 @@ public class MainMenuFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void play();
         void exit();
         void resume();

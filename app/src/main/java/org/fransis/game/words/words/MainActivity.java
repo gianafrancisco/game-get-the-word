@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class MainActivity extends AppCompatActivity implements MainMenuFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements MainMenuFragment.OnFragmentInteractionListener, DialogLevel.OnDialogInteractionListener {
 
 
     Fragment mainMenu = null;
@@ -51,5 +51,15 @@ public class MainActivity extends AppCompatActivity implements MainMenuFragment.
             transaction.addToBackStack(null);
             transaction.commit();
         }
+    }
+
+    @Override
+    public void nextLevel() {
+        ((GameFragment)game).siguienteNivel();
+    }
+
+    @Override
+    public void restartLevel() {
+        ((GameFragment)game).reiniciarNivel();
     }
 }

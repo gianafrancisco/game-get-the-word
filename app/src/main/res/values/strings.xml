@@ -1,12 +1,10 @@
 <resources>
     <string name="app_name">Words</string>
-    <string name="intentos_disponibles">Intentos disponibles </string>
-    <string name="reiniciar_nivel">Volver a intentar</string>
-    <string name="siguiente_nivel">Siguiente Palabra</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="restart_level">Volver a intentar</string>
+    <string name="next_level">Siguiente\n Palabra</string>
     <string name="iniciar_juego">Nuevo juego</string>
-    <string name="salir">Salir</string>
-    <string name="seguir_jugando">Continuar juego</string>
+    <string name="quit">Salir</string>
+    <string name="resume_game">Continuar juego</string>
+    <string name="well_done">Felicitaciones!!</string>
+    <string name="game_over">Game Over!!</string>
 </resources>
