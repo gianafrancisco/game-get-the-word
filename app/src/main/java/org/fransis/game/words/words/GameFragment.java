@@ -3,7 +3,9 @@ package org.fransis.game.words.words;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +14,10 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class GameFragment extends Fragment {
 
@@ -27,16 +27,12 @@ public class GameFragment extends Fragment {
     GridView gridviewResult = null;
     Game myGame = null;
     GridView gridview = null;
-    Button btnVolverIntentar = null;
-    Button btnNextLevel = null;
     GameCallback callback = null;
     LevelRepository levels = null;
     TextView tvCurrent = null;
     AnimationSet animationIn = null;
     AnimationSet animationOut = null;
     Context mContext = null;
-    View.OnClickListener listenerNextLevel = null;
-    View.OnClickListener listenerTryAgain = null;
     AdapterView.OnItemClickListener listenerClickChar = null;
 
 
@@ -46,11 +42,9 @@ public class GameFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mContext = getActivity().getApplicationContext();
         Animation fadeIn = new AlphaAnimation(0, 1);
-        //fadeIn.setInterpolator(new DecelerateInterpolator());
         fadeIn.setDuration(1000);
 
         Animation fadeOut = new AlphaAnimation(1, 0);
-        //fadeOut.setInterpolator(new AccelerateInterpolator());
         fadeOut.setDuration(500);
 
         animationIn = new AnimationSet(false);
@@ -60,39 +54,17 @@ public class GameFragment extends Fragment {
 
         levels = new MemoryRepository();
 
-        listenerTryAgain = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                reiniciarNivel(levels.getLevel());
-            }
-        };
-
-
-        listenerNextLevel = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                reiniciarNivel(levels.getNextLevel());
-            }
-        };
-
 
         callback = new GameCallback() {
 
             @Override
             public void gameOver() {
-                Toast.makeText(mContext, "Game Over!", Toast.LENGTH_LONG).show();
-                gridview.setEnabled(false);
-                hud.setVisibility(View.GONE);
-                btnVolverIntentar.setVisibility(View.VISIBLE);
-
+                showDialog(DialogLevel.newInstance(DialogLevel.GAME_OVER));
             }
 
             @Override
             public void wellDone() {
-                Toast.makeText(mContext, "Well Done!", Toast.LENGTH_LONG).show();
-                gridview.setEnabled(false);
-                hud.setVisibility(View.GONE);
-                btnNextLevel.setVisibility(View.VISIBLE);
+                showDialog(DialogLevel.newInstance(DialogLevel.WELL_DONE));
             }
 
             @Override
@@ -133,13 +105,9 @@ public class GameFragment extends Fragment {
 
         gridview = (GridView) inflate.findViewById(R.id.gridview);
         gridviewResult = (GridView) inflate.findViewById(R.id.gridview_result);
-        btnVolverIntentar = (Button) inflate.findViewById(R.id.btnReintentar);
-        btnNextLevel = (Button) inflate.findViewById(R.id.btnSiguienteNivel);
         hud = (LinearLayout) inflate.findViewById(R.id.hud);
 
         gridview.setOnItemClickListener(listenerClickChar);
-        btnNextLevel.setOnClickListener(listenerNextLevel);
-        btnVolverIntentar.setOnClickListener(listenerTryAgain);
 
         iniciarNivel(levels.getLevel());
 
@@ -147,18 +115,22 @@ public class GameFragment extends Fragment {
     }
 
 
-    private void reiniciarNivel(Level level){
+    public void reiniciarNivel(){
+        Level level = levels.getLevel();
+        myGame = new Game(level);
+        iniciarNivel(level);
+    }
+
+    public void siguienteNivel(){
+        Level level = levels.getNextLevel();
         myGame = new Game(level);
         iniciarNivel(level);
     }
 
     private void iniciarNivel(Level level) {
-        //myGame = new Game(level);
         hud.removeAllViews();
         drawNTry(myGame.getnTry());
         hud.setVisibility(View.VISIBLE);
-        btnVolverIntentar.setVisibility(View.GONE);
-        btnNextLevel.setVisibility(View.GONE);
         String word = myGame.getWord();
         adapterResult = new ArrayAdapter<String>(mContext, R.layout.item, R.id.item_id);
         for (int i= 0; i< word.length(); i++){
@@ -189,5 +161,15 @@ public class GameFragment extends Fragment {
             }
         }
     }
+
+    private void showDialog(DialogFragment dialog){
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        dialog.show(ft, "dialog");
+    }
+
 }
 

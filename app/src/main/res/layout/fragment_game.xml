@@ -27,24 +27,6 @@
                 >
             </LinearLayout>
 
-            <Button
-                android:id="@+id/btnReintentar"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/reiniciar_nivel"
-                android:background="@drawable/wrong"
-                android:layout_weight="1"
-                android:visibility="gone"
-                />
-            <Button
-                android:id="@+id/btnSiguienteNivel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/siguiente_nivel"
-                android:background="@drawable/good"
-                android:layout_weight="1"
-                android:visibility="gone"
-                />
         </LinearLayout>
         <GridView
             android:id="@+id/gridview"
