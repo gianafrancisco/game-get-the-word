@@ -5,4 +5,5 @@ public interface GameCallback {
     void wellDone();
     void character(String word);
     void fail(int ntry);
+    void score(int score);
 }

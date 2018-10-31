@@ -8,6 +8,7 @@ public class Game {
     private GameCallback callback = null;
     private Level current;
 
+
     public Game(Level level){
         maxTry = 5;
         nTry = 0;
@@ -44,13 +45,32 @@ public class Game {
                         index = current.getSecretWord().indexOf(letter, index + 1);
                     }
                     if(found){
-                        if(callback != null)
+                        if(callback != null) {
                             callback.character(word.toString());
+                            if (word.indexOf("_") < 0) {
+                                callback.wellDone();
+                                switch (nTry) {
+                                    case 0:
+                                        callback.score(GameScore.MAX);
+                                        break;
+                                    case 1:
+                                        callback.score(GameScore.S4);
+                                        break;
+                                    case 2:
+                                        callback.score(GameScore.S3);
+                                        break;
+                                    case 3:
+                                        callback.score(GameScore.S2);
+                                        break;
+                                    case 4:
+                                        callback.score(GameScore.S1);
+                                        break;
+                                }
+                            }
+                        }
                         else
                             throw new RuntimeException("Callback is null");
-                        if(word.indexOf("_") < 0){
-                            callback.wellDone();
-                        }
+
                     }else{
                         nTry++;
                         if(callback != null)
