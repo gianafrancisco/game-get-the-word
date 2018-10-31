@@ -25,6 +25,27 @@
                 android:orientation="horizontal"
                 android:layout_weight="1"
                 >
+                <LinearLayout
+                    android:id="@+id/hud_attempts"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_weight="2"
+                    >
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/hud_score"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_weight="1"
+                    android:text="99999"
+                    android:textSize="35dp"
+                    android:layout_marginTop="-10dp"
+                    android:textAlignment="textEnd"
+                    android:layout_gravity="end|top"
+                    >
+                </TextView>
             </LinearLayout>
 
         </LinearLayout>

@@ -1,5 +1,6 @@
 package org.fransis.game.words.words;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
@@ -21,19 +22,26 @@ import android.widget.TextView;
 
 public class GameFragment extends Fragment {
 
-    LinearLayout hud;
+    public static final String SCORE_FORMAT = "%1$05d";
+    LinearLayout hudAttempts = null;
+    TextView hudScore = null;
     ArrayAdapter<String> adapterResult = null;
     ArrayAdapter<String> adapter = null;
     GridView gridviewResult = null;
     Game myGame = null;
+    Player player = null;
     GridView gridview = null;
     GameCallback callback = null;
     LevelRepository levels = null;
     TextView tvCurrent = null;
     AnimationSet animationIn = null;
     AnimationSet animationOut = null;
+    ValueAnimator scoreAnimator = null;
     Context mContext = null;
     AdapterView.OnItemClickListener listenerClickChar = null;
+    int lastScore = 0;
+    int prevScore = 0;
+    ValueAnimator.AnimatorUpdateListener listenerScoreAnimation = null;
 
 
 
@@ -43,9 +51,16 @@ public class GameFragment extends Fragment {
         mContext = getActivity().getApplicationContext();
         Animation fadeIn = new AlphaAnimation(0, 1);
         fadeIn.setDuration(1000);
-
         Animation fadeOut = new AlphaAnimation(1, 0);
         fadeOut.setDuration(500);
+
+        listenerScoreAnimation = new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                String score = String.format(SCORE_FORMAT, (int)animation.getAnimatedValue());
+                hudScore.setText(score);
+            }
+        };
 
         animationIn = new AnimationSet(false);
         animationIn.addAnimation(fadeIn);
@@ -81,6 +96,11 @@ public class GameFragment extends Fragment {
                 tvCurrent.setBackgroundResource(R.drawable.wrong);
                 drawNTry(myGame.getnTry());
             }
+
+            @Override
+            public void score(int score) {
+                lastScore = score;
+            }
         };
 
         listenerClickChar = new AdapterView.OnItemClickListener() {
@@ -94,6 +114,7 @@ public class GameFragment extends Fragment {
             }
         };
 
+        player = new Player();
         myGame = new Game(levels.getLevel());
 
     }
@@ -105,10 +126,13 @@ public class GameFragment extends Fragment {
 
         gridview = (GridView) inflate.findViewById(R.id.gridview);
         gridviewResult = (GridView) inflate.findViewById(R.id.gridview_result);
-        hud = (LinearLayout) inflate.findViewById(R.id.hud);
+        hudAttempts = (LinearLayout) inflate.findViewById(R.id.hud_attempts);
+        hudScore = (TextView) inflate.findViewById(R.id.hud_score);
 
         gridview.setOnItemClickListener(listenerClickChar);
 
+        String score = String.format(SCORE_FORMAT, player.getScore());
+        hudScore.setText(score);
         iniciarNivel(levels.getLevel());
 
         return inflate;
@@ -116,21 +140,30 @@ public class GameFragment extends Fragment {
 
 
     public void reiniciarNivel(){
+        prevScore = player.getScore();
         Level level = levels.getLevel();
         myGame = new Game(level);
         iniciarNivel(level);
     }
 
     public void siguienteNivel(){
+        prevScore = player.getScore();
+        player.addScore(lastScore);
         Level level = levels.getNextLevel();
         myGame = new Game(level);
         iniciarNivel(level);
     }
 
     private void iniciarNivel(Level level) {
-        hud.removeAllViews();
+
+        scoreAnimator = ValueAnimator.ofInt(prevScore, player.getScore());
+        scoreAnimator.setDuration(1000);
+        scoreAnimator.addUpdateListener(listenerScoreAnimation);
+        scoreAnimator.start();
+
+        hudAttempts.removeAllViews();
         drawNTry(myGame.getnTry());
-        hud.setVisibility(View.VISIBLE);
+        hudAttempts.setVisibility(View.VISIBLE);
         String word = myGame.getWord();
         adapterResult = new ArrayAdapter<String>(mContext, R.layout.item, R.id.item_id);
         for (int i= 0; i< word.length(); i++){
@@ -148,15 +181,15 @@ public class GameFragment extends Fragment {
     }
 
     private void drawNTry(int nTry){
-        if(hud.getChildCount() > 0){
-            View iv =  hud.getChildAt(nTry);
+        if(hudAttempts.getChildCount() > 0){
+            View iv =  hudAttempts.getChildAt(nTry);
             iv.startAnimation(animationOut);
-            hud.removeViewAt(nTry);
+            hudAttempts.removeViewAt(nTry);
         }else{
             for(int i=0; i < nTry; i++){
                 ImageView heart = new ImageView(mContext);
                 heart.setImageResource(R.drawable.heart);
-                hud.addView(heart);
+                hudAttempts.addView(heart);
                 heart.startAnimation(animationIn);
             }
         }
