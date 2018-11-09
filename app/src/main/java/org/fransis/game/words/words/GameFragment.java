@@ -22,7 +22,7 @@ import android.widget.TextView;
 
 public class GameFragment extends Fragment {
 
-    public static final String SCORE_FORMAT = "%1$05d";
+    public static final String SCORE_FORMAT = "%1d";
     LinearLayout hudAttempts = null;
     TextView hudScore = null;
     ArrayAdapter<String> adapterResult = null;
@@ -100,6 +100,12 @@ public class GameFragment extends Fragment {
             @Override
             public void score(int score) {
                 lastScore = score;
+                prevScore = player.getScore();
+                player.addScore(lastScore);
+                scoreAnimator = ValueAnimator.ofInt(prevScore, player.getScore());
+                scoreAnimator.setDuration(1000);
+                scoreAnimator.addUpdateListener(listenerScoreAnimation);
+                scoreAnimator.start();
             }
         };
 
@@ -140,26 +146,18 @@ public class GameFragment extends Fragment {
 
 
     public void reiniciarNivel(){
-        prevScore = player.getScore();
         Level level = levels.getLevel();
         myGame = new Game(level);
         iniciarNivel(level);
     }
 
     public void siguienteNivel(){
-        prevScore = player.getScore();
-        player.addScore(lastScore);
         Level level = levels.getNextLevel();
         myGame = new Game(level);
         iniciarNivel(level);
     }
 
     private void iniciarNivel(Level level) {
-
-        scoreAnimator = ValueAnimator.ofInt(prevScore, player.getScore());
-        scoreAnimator.setDuration(1000);
-        scoreAnimator.addUpdateListener(listenerScoreAnimation);
-        scoreAnimator.start();
 
         hudAttempts.removeAllViews();
         drawNTry(myGame.getnTry());

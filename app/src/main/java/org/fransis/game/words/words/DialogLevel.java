@@ -63,17 +63,18 @@ public class DialogLevel extends DialogFragment {
         btnNextLevel.setBackgroundResource(R.drawable.good);
 
         TextView tv = (TextView)v.findViewById(R.id.dialog_msg);
-
+        Button btnVolverIntentar = (Button) v.findViewById(R.id.btnReintentar);
         if(dialogType == WELL_DONE){
             btnNextLevel.setOnClickListener(btnListener);
             tv.setText(R.string.well_done);
+            btnVolverIntentar.setVisibility(View.GONE);
         }else{
             btnNextLevel.setVisibility(View.GONE);
             tv.setText(R.string.game_over);
+            btnVolverIntentar.setBackgroundResource(R.drawable.wrong);
+            btnVolverIntentar.setOnClickListener(btnListener);
         }
-        Button btnVolverIntentar = (Button) v.findViewById(R.id.btnReintentar);
-        btnVolverIntentar.setBackgroundResource(R.drawable.wrong);
-        btnVolverIntentar.setOnClickListener(btnListener);
+
         return v;
     }
 
