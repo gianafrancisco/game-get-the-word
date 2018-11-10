@@ -24,6 +24,7 @@ public class GameFragment extends Fragment {
 
     public static final String SCORE_FORMAT = "%1d";
     LinearLayout hudAttempts = null;
+    TextView hudAttemptsText = null;
     TextView hudScore = null;
     ArrayAdapter<String> adapterResult = null;
     ArrayAdapter<String> adapter = null;
@@ -134,7 +135,7 @@ public class GameFragment extends Fragment {
         gridviewResult = (GridView) inflate.findViewById(R.id.gridview_result);
         hudAttempts = (LinearLayout) inflate.findViewById(R.id.hud_attempts);
         hudScore = (TextView) inflate.findViewById(R.id.hud_score);
-
+        hudAttemptsText = (TextView) inflate.findViewById(R.id.hud_attempts_text);
         gridview.setOnItemClickListener(listenerClickChar);
 
         String score = String.format(SCORE_FORMAT, player.getScore());
@@ -159,7 +160,7 @@ public class GameFragment extends Fragment {
 
     private void iniciarNivel(Level level) {
 
-        hudAttempts.removeAllViews();
+        //hudAttempts.removeAllViews();
         drawNTry(myGame.getnTry());
         hudAttempts.setVisibility(View.VISIBLE);
         String word = myGame.getWord();
@@ -179,7 +180,8 @@ public class GameFragment extends Fragment {
     }
 
     private void drawNTry(int nTry){
-        if(hudAttempts.getChildCount() > 0){
+        hudAttemptsText.setText(String.format(SCORE_FORMAT,myGame.getnTry()));
+        /*if(hudAttempts.getChildCount() > 0){
             View iv =  hudAttempts.getChildAt(nTry);
             iv.startAnimation(animationOut);
             hudAttempts.removeViewAt(nTry);
@@ -190,7 +192,7 @@ public class GameFragment extends Fragment {
                 hudAttempts.addView(heart);
                 heart.startAnimation(animationIn);
             }
-        }
+        }*/
     }
 
     private void showDialog(DialogFragment dialog){
