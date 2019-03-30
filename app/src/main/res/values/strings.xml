@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Words</string>
+    <string name="restart_level">Volver a intentar</string>
+    <string name="next_level">Siguiente\n Palabra</string>
+    <string name="iniciar_juego">Nuevo juego</string>
+    <string name="quit">Salir</string>
+    <string name="resume_game">Continuar juego</string>
+    <string name="well_done">Felicitaciones!!</string>
+    <string name="game_over">Game Over!!</string>
 </resources>
