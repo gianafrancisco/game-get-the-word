@@ -1,7 +1,9 @@
 package org.fransis.game.words;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -175,14 +177,18 @@ public class MainActivity extends AppCompatActivity implements
                     @Override
                     public void onComplete(@NonNull Task<Player> task) {
                         String displayName;
+                        Uri picture;
                         if (task.isSuccessful()) {
                             displayName = task.getResult().getDisplayName();
+                            picture = task.getResult().getHiResImageUri();
                         } else {
                             Exception e = task.getException();
                             handleException(e, getString(R.string.players_exception));
                             displayName = "???";
+                            picture = null;
                         }
-                        // mMainMenuFragment.setGreeting("Hello, " + displayName);
+                        mMainMenu.setGreeting("Hello, " + displayName);
+                        mMainMenu.setPlayerPicture(picture);
                     }
                 });
 
@@ -202,6 +208,32 @@ public class MainActivity extends AppCompatActivity implements
                 .setMessage(message)
                 .setNeutralButton(android.R.string.ok, null)
                 .show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        if (requestCode == RC_SIGN_IN) {
+            Task<GoogleSignInAccount> task =
+                    GoogleSignIn.getSignedInAccountFromIntent(intent);
+
+            try {
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                onConnected(account);
+            } catch (ApiException apiException) {
+                String message = apiException.getMessage();
+                if (message == null || message.isEmpty()) {
+                    message = getString(R.string.signin_other_error);
+                }
+
+                onDisconnected();
+
+                new AlertDialog.Builder(this)
+                        .setMessage(message)
+                        .setNeutralButton(android.R.string.ok, null)
+                        .show();
+            }
+        }
     }
 
 }
