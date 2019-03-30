@@ -1,4 +1,4 @@
-package org.fransis.game.words.words;
+package org.fransis.game.words;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -16,11 +16,12 @@ import android.view.animation.AnimationSet;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class GameFragment extends Fragment {
+import org.fransis.game.words.words.R;
+
+public class GameFragment extends Fragment implements GameCallback {
 
     public static final String SCORE_FORMAT = "%1d";
     LinearLayout hudAttempts = null;
@@ -32,7 +33,6 @@ public class GameFragment extends Fragment {
     Game myGame = null;
     Player player = null;
     GridView gridview = null;
-    GameCallback callback = null;
     LevelRepository levels = null;
     TextView tvCurrent = null;
     AnimationSet animationIn = null;
@@ -43,8 +43,6 @@ public class GameFragment extends Fragment {
     int lastScore = 0;
     int prevScore = 0;
     ValueAnimator.AnimatorUpdateListener listenerScoreAnimation = null;
-
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,46 +67,6 @@ public class GameFragment extends Fragment {
         animationOut.addAnimation(fadeOut);
 
         levels = new MemoryRepository();
-
-
-        callback = new GameCallback() {
-
-            @Override
-            public void gameOver() {
-                showDialog(DialogLevel.newInstance(DialogLevel.GAME_OVER));
-            }
-
-            @Override
-            public void wellDone() {
-                showDialog(DialogLevel.newInstance(DialogLevel.WELL_DONE));
-            }
-
-            @Override
-            public void character(String word) {
-                tvCurrent.setBackgroundResource(R.drawable.good);
-                adapterResult.clear();
-                for (int i = 0; i < word.length(); i++) {
-                    adapterResult.add(word.substring(i, i + 1));
-                }
-            }
-
-            @Override
-            public void fail(int tryAvailable) {
-                tvCurrent.setBackgroundResource(R.drawable.wrong);
-                drawNTry(myGame.getnTry());
-            }
-
-            @Override
-            public void score(int score) {
-                lastScore = score;
-                prevScore = player.getScore();
-                player.addScore(lastScore);
-                scoreAnimator = ValueAnimator.ofInt(prevScore, player.getScore());
-                scoreAnimator.setDuration(1000);
-                scoreAnimator.addUpdateListener(listenerScoreAnimation);
-                scoreAnimator.start();
-            }
-        };
 
         listenerClickChar = new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
@@ -140,59 +98,44 @@ public class GameFragment extends Fragment {
 
         String score = String.format(SCORE_FORMAT, player.getScore());
         hudScore.setText(score);
-        iniciarNivel(levels.getLevel());
+        startLevel();
 
         return inflate;
     }
 
-
-    public void reiniciarNivel(){
+    public void restartLevel(){
         Level level = levels.getLevel();
         myGame = new Game(level);
-        iniciarNivel(level);
+        startLevel();
     }
 
-    public void siguienteNivel(){
+    public void nextLevel(){
         Level level = levels.getNextLevel();
         myGame = new Game(level);
-        iniciarNivel(level);
+        startLevel();
     }
 
-    private void iniciarNivel(Level level) {
-
-        //hudAttempts.removeAllViews();
-        drawNTry(myGame.getnTry());
+    private void startLevel() {
+        drawNTry();
         hudAttempts.setVisibility(View.VISIBLE);
         String word = myGame.getWord();
-        adapterResult = new ArrayAdapter<String>(mContext, R.layout.item, R.id.item_id);
+        adapterResult = new ArrayAdapter<>(mContext, R.layout.item, R.id.item_id);
         for (int i= 0; i< word.length(); i++){
             adapterResult.add(word.substring(i, i + 1));
         }
         gridviewResult.setAdapter(adapterResult);
 
-        adapter = new ArrayAdapter<String>(mContext, R.layout.item, R.id.item_id);
+        adapter = new ArrayAdapter<>(mContext, R.layout.item, R.id.item_id);
         String words = myGame.getAlphabet();
         for (int i=0; i<words.length();i++)
             adapter.add(words.substring(i,i+1));
         gridview.setAdapter(adapter);
         gridview.setEnabled(true);
-        myGame.setCallback(callback);
+        myGame.setCallback(this);
     }
 
-    private void drawNTry(int nTry){
-        hudAttemptsText.setText(String.format(SCORE_FORMAT,myGame.getnTry()));
-        /*if(hudAttempts.getChildCount() > 0){
-            View iv =  hudAttempts.getChildAt(nTry);
-            iv.startAnimation(animationOut);
-            hudAttempts.removeViewAt(nTry);
-        }else{
-            for(int i=0; i < nTry; i++){
-                ImageView heart = new ImageView(mContext);
-                heart.setImageResource(R.drawable.heart);
-                hudAttempts.addView(heart);
-                heart.startAnimation(animationIn);
-            }
-        }*/
+    private void drawNTry(){
+        hudAttemptsText.setText(String.format(SCORE_FORMAT,myGame.getNTry()));
     }
 
     private void showDialog(DialogFragment dialog){
@@ -204,5 +147,40 @@ public class GameFragment extends Fragment {
         dialog.show(ft, "dialog");
     }
 
+    @Override
+    public void gameOver() {
+        showDialog(DialogLevel.newInstance(DialogLevel.GAME_OVER));
+    }
+
+    @Override
+    public void wellDone() {
+        showDialog(DialogLevel.newInstance(DialogLevel.WELL_DONE));
+    }
+
+    @Override
+    public void character(String word) {
+        tvCurrent.setBackgroundResource(R.drawable.good);
+        adapterResult.clear();
+        for (int i = 0; i < word.length(); i++) {
+            adapterResult.add(word.substring(i, i + 1));
+        }
+    }
+
+    @Override
+    public void fail(int tryAvailable) {
+        tvCurrent.setBackgroundResource(R.drawable.wrong);
+        drawNTry();
+    }
+
+    @Override
+    public void score(int score) {
+        lastScore = score;
+        prevScore = player.getScore();
+        player.addScore(lastScore);
+        scoreAnimator = ValueAnimator.ofInt(prevScore, player.getScore());
+        scoreAnimator.setDuration(1000);
+        scoreAnimator.addUpdateListener(listenerScoreAnimation);
+        scoreAnimator.start();
+    }
 }
 

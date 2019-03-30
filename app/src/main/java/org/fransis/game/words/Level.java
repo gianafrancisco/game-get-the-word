@@ -1,4 +1,4 @@
-package org.fransis.game.words.words;
+package org.fransis.game.words;
 
 public class Level {
     public static final String DEFAULT_ALPHABET = "abcdefghijklmnñopqrstuvwxyz".toUpperCase();

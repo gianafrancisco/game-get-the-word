@@ -1,4 +1,4 @@
-package org.fransis.game.words.words;
+package org.fransis.game.words;
 
 public interface LevelRepository {
     Level getLevel();

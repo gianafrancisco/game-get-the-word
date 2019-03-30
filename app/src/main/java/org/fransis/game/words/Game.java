@@ -1,4 +1,4 @@
-package org.fransis.game.words.words;
+package org.fransis.game.words;
 
 public class Game {
     private int maxTry;
@@ -28,7 +28,7 @@ public class Game {
         return current.getAlphabet();
     }
 
-    public int getnTry(){
+    public int getNTry(){
         return maxTry - nTry;
     }
 

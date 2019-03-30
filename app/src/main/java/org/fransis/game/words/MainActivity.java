@@ -1,18 +1,19 @@
-package org.fransis.game.words.words;
+package org.fransis.game.words;
 
 import android.content.pm.ActivityInfo;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class MainActivity extends AppCompatActivity implements MainMenuFragment.OnFragmentInteractionListener, DialogLevel.OnDialogInteractionListener {
+import org.fransis.game.words.words.R;
 
+public class MainActivity extends AppCompatActivity implements
+        MainMenuFragment.OnFragmentInteractionListener,
+        DialogLevel.OnDialogInteractionListener {
 
-    Fragment mainMenu = null;
-    Fragment game = null;
-
+    MainMenuFragment mainMenu = null;
+    GameFragment game = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,11 +56,11 @@ public class MainActivity extends AppCompatActivity implements MainMenuFragment.
 
     @Override
     public void nextLevel() {
-        ((GameFragment)game).siguienteNivel();
+        game.nextLevel();
     }
 
     @Override
     public void restartLevel() {
-        ((GameFragment)game).reiniciarNivel();
+        game.restartLevel();
     }
 }

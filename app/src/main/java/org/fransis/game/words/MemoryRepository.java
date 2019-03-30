@@ -1,4 +1,4 @@
-package org.fransis.game.words.words;
+package org.fransis.game.words;
 
 import java.util.ArrayList;
 import java.util.List;
