@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="5dp"
+    android:padding="0dp"
     android:background="@color/vintage_background"
     tools:context=".GameFragment">
 
@@ -24,14 +24,24 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
                 android:layout_weight="1"
+                android:background="@drawable/header"
                 >
                 <LinearLayout
                     android:id="@+id/hud_attempts"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
                     android:layout_weight="3"
                     >
+                    <TextView
+                        android:id="@+id/hud_attempts_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/heart"
+                        android:text="5"
+                        android:textSize="25dp"
+                        android:textAlignment="center"
+                        />
                 </LinearLayout>
                 <TextView
                     android:id="@+id/hud_score"
@@ -49,34 +59,40 @@
             </LinearLayout>
 
         </LinearLayout>
-        <GridView
-            android:id="@+id/gridview"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:columnWidth="40dp"
-            android:verticalSpacing="5dp"
-            android:horizontalSpacing="5dp"
-            android:stretchMode="none"
-            android:numColumns="auto_fit"
-            android:layout_weight="5"
-            android:gravity="center_vertical|center_horizontal"
-            >
-        </GridView>
+            android:orientation="vertical"
+            android:layout_weight="8"
+            android:padding="5dp">
+            <GridView
+                android:id="@+id/gridview"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:columnWidth="40dp"
+                android:verticalSpacing="5dp"
+                android:horizontalSpacing="5dp"
+                android:stretchMode="none"
+                android:numColumns="auto_fit"
+                android:layout_weight="3"
+                android:gravity="center_vertical|center_horizontal"
+                >
+            </GridView>
 
-        <GridView
-            android:id="@+id/gridview_result"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:columnWidth="40dp"
-            android:verticalSpacing="5dp"
-            android:horizontalSpacing="5dp"
-            android:stretchMode="none"
-            android:numColumns="auto_fit"
-            android:gravity="center_vertical|center_horizontal"
-            android:layout_weight="3"
-            >
-        </GridView>
-
+            <GridView
+                android:id="@+id/gridview_result"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:columnWidth="40dp"
+                android:verticalSpacing="5dp"
+                android:horizontalSpacing="5dp"
+                android:stretchMode="none"
+                android:numColumns="auto_fit"
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_weight="1"
+                >
+            </GridView>
+        </LinearLayout>
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
