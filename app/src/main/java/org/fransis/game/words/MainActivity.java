@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private void onConnected(GoogleSignInAccount googleSignInAccount) {
         Log.d(TAG, "onConnected(): connected to Google APIs");
-
+        Games.getGamesClient(getApplicationContext(),googleSignInAccount).setViewForPopups(findViewById(R.id.fragment_container));
         mPlayersClient = Games.getPlayersClient(this, googleSignInAccount);
 
         // Show sign-out button on main menu
