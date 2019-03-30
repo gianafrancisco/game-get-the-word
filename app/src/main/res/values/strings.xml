@@ -7,4 +7,9 @@
     <string name="resume_game">Continuar juego</string>
     <string name="well_done">Felicitaciones!!</string>
     <string name="game_over">Game Over!!</string>
+    <string name="sign_in_why">Sign in with Google to share your scores and achievements with your friends.</string>
+    <string name="you_are_signed_in">You are signed in with Google.</string>
+    <string name="sign_out">Sign out</string>
+    <string name="status_exception_error">%1$s (status %2$d). %3$s.</string>
+    <string name="players_exception">There was an issue communicating with players.</string>
 </resources>
