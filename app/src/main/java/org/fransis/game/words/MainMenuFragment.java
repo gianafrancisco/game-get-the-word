@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.fransis.game.words.words.R;
@@ -24,11 +23,10 @@ public class MainMenuFragment extends Fragment implements View.OnClickListener {
     }
 
     private OnFragmentInteractionListener mListener;
-    private View mSignInBarView;
-    private View mSignOutBarView;
+    private View mSignInButtonView;
+    private View mSignOutButtonView;
     private boolean mShowSignInButton = true;
     private TextView mGreetingTextView;
-    private ImageView mPlayerPicture;
     private Uri mPlayerPictureUri = null;
     private String mGreeting;
 
@@ -51,9 +49,8 @@ public class MainMenuFragment extends Fragment implements View.OnClickListener {
         resume.setOnClickListener(this);
 
         mGreetingTextView = inflate.findViewById(R.id.text_greeting);
-        mSignInBarView = inflate.findViewById(R.id.sign_in_bar);
-        mSignOutBarView = inflate.findViewById(R.id.sign_out_bar);
-        mPlayerPicture = inflate.findViewById(R.id.player_picture);
+        mSignInButtonView = inflate.findViewById(R.id.sign_in_button);
+        mSignOutButtonView = inflate.findViewById(R.id.sign_out_button);
 
         inflate.findViewById(R.id.sign_in_button).setOnClickListener(this);
         inflate.findViewById(R.id.sign_out_button).setOnClickListener(this);
@@ -80,12 +77,9 @@ public class MainMenuFragment extends Fragment implements View.OnClickListener {
     }
 
     private void updateUI() {
-        if(mPlayerPictureUri != null) {
-            mPlayerPicture.setImageURI(mPlayerPictureUri);
-        }
         mGreetingTextView.setText(mGreeting);
-        mSignInBarView.setVisibility(mShowSignInButton ? View.VISIBLE : View.GONE);
-        mSignOutBarView.setVisibility(mShowSignInButton ? View.GONE : View.VISIBLE);
+        mSignInButtonView.setVisibility(mShowSignInButton ? View.VISIBLE : View.GONE);
+        mSignOutButtonView.setVisibility(mShowSignInButton ? View.GONE : View.VISIBLE);
     }
 
     public void setShowSignInButton(boolean showSignInButton) {
@@ -118,8 +112,4 @@ public class MainMenuFragment extends Fragment implements View.OnClickListener {
         updateUI();
     }
 
-    public void setPlayerPicture(Uri mPlayerPictureUri) {
-        this.mPlayerPictureUri = mPlayerPictureUri;
-        updateUI();
-    }
 }

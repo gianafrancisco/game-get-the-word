@@ -3,7 +3,6 @@ package org.fransis.game.words;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -32,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements
     private GameFragment mGame = null;
     private GoogleSignInClient mGoogleSignInClient;
     private PlayersClient mPlayersClient;
+    private String mGreetingMsg;
     // request codes we use when invoking an external activity
     private static final int RC_UNUSED = 5001;
     private static final int RC_SIGN_IN = 9001;
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_main);
-
+        mGreetingMsg = getString(R.string.greeting_welcome);
         // Create the client used to sign in to Google services.
         mGoogleSignInClient = GoogleSignIn.getClient(this,
                 new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN).build());
@@ -161,6 +161,7 @@ public class MainActivity extends AppCompatActivity implements
 
         // Show sign-in button on main menu
         mMainMenu.setShowSignInButton(true);
+        mMainMenu.setGreeting("");
     }
 
     private void onConnected(GoogleSignInAccount googleSignInAccount) {
@@ -177,18 +178,15 @@ public class MainActivity extends AppCompatActivity implements
                     @Override
                     public void onComplete(@NonNull Task<Player> task) {
                         String displayName;
-                        Uri picture;
                         if (task.isSuccessful()) {
                             displayName = task.getResult().getDisplayName();
-                            picture = task.getResult().getHiResImageUri();
                         } else {
                             Exception e = task.getException();
                             handleException(e, getString(R.string.players_exception));
                             displayName = "???";
-                            picture = null;
                         }
-                        mMainMenu.setGreeting("Hello, " + displayName);
-                        mMainMenu.setPlayerPicture(picture);
+
+                        mMainMenu.setGreeting(mGreetingMsg + ", " + displayName);
                     }
                 });
 
