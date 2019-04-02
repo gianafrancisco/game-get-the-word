@@ -27,8 +27,8 @@ public class MainActivity extends AppCompatActivity implements
         MainMenuFragment.OnFragmentInteractionListener,
         DialogLevel.OnDialogInteractionListener {
 
-    private MainMenuFragment mMainMenu = null;
-    private GameFragment mGame = null;
+    private MainMenuFragment mMainMenuFragment = null;
+    private GameFragment mGameFragment = null;
     private GoogleSignInClient mGoogleSignInClient;
     private PlayersClient mPlayersClient;
     private String mGreetingMsg;
@@ -36,6 +36,9 @@ public class MainActivity extends AppCompatActivity implements
     private static final int RC_UNUSED = 5001;
     private static final int RC_SIGN_IN = 9001;
     private static final String TAG = "GAME";
+    private Game mGame;
+    private LevelRepository mLevelRepository;
+    private org.fransis.game.words.Player mPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,24 +46,32 @@ public class MainActivity extends AppCompatActivity implements
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_main);
         mGreetingMsg = getString(R.string.greeting_welcome);
+
         // Create the client used to sign in to Google services.
         mGoogleSignInClient = GoogleSignIn.getClient(this,
                 new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN).build());
 
-        mMainMenu = new MainMenuFragment();
+        mMainMenuFragment = new MainMenuFragment();
+        mGameFragment = new GameFragment();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.fragment_container, mMainMenu);
+        fragmentTransaction.add(R.id.fragment_container, mMainMenuFragment);
         fragmentTransaction.commit();
 
     }
 
     @Override
     public void onPlayButtonClicked() {
-        mGame = new GameFragment();
+
+        mLevelRepository = new MemoryRepository();
+        mPlayer = new org.fransis.game.words.Player();
+        mGame = new Game(mLevelRepository.getLevel());
+        mGameFragment.setGame(mGame);
+        mGameFragment.setPlayer(mPlayer);
+
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, mGame);
+        transaction.replace(R.id.fragment_container, mGameFragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }
@@ -72,9 +83,9 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onResumeButtonClicked() {
-        if(mGame != null){
+        if(mGameFragment != null){
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, mGame);
+            transaction.replace(R.id.fragment_container, mGameFragment);
             transaction.addToBackStack(null);
             transaction.commit();
         }
@@ -91,13 +102,15 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void nextLevel() {
-        mGame.nextLevel();
+    public void onNextLevelClicked() {
+        mGame.reset(mLevelRepository.getNextLevel());
+        mGameFragment.startLevel();
     }
 
     @Override
-    public void restartLevel() {
-        mGame.restartLevel();
+    public void onRestartLevelClicked() {
+        mGame.reset(mLevelRepository.getLevel());
+        mGameFragment.startLevel();
     }
 
     private boolean isSignedIn() {
@@ -160,8 +173,8 @@ public class MainActivity extends AppCompatActivity implements
         Log.d(TAG, "onDisconnected()");
 
         // Show sign-in button on main menu
-        mMainMenu.setShowSignInButton(true);
-        mMainMenu.setGreeting("");
+        mMainMenuFragment.setShowSignInButton(true);
+        mMainMenuFragment.setGreeting("");
     }
 
     private void onConnected(GoogleSignInAccount googleSignInAccount) {
@@ -170,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements
         mPlayersClient = Games.getPlayersClient(this, googleSignInAccount);
 
         // Show sign-out button on main menu
-        mMainMenu.setShowSignInButton(false);
+        mMainMenuFragment.setShowSignInButton(false);
 
         // Set the greeting appropriately on main menu
         mPlayersClient.getCurrentPlayer()
@@ -186,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements
                             displayName = "???";
                         }
 
-                        mMainMenu.setGreeting(mGreetingMsg + ", " + displayName);
+                        mMainMenuFragment.setGreeting(mGreetingMsg + ", " + displayName);
                     }
                 });
 

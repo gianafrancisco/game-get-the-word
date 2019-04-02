@@ -10,6 +10,10 @@ public class Game {
 
 
     public Game(Level level){
+        this.reset(level);
+    }
+
+    public void reset(Level level){
         maxTry = 5;
         nTry = 0;
         this.current = level;

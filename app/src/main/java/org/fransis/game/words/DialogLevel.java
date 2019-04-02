@@ -45,9 +45,9 @@ public class DialogLevel extends DialogFragment {
                 OnDialogInteractionListener game = ((OnDialogInteractionListener)getActivity());
 
                 if(v.getId() == R.id.btnSiguienteNivel){
-                    game.nextLevel();
+                    game.onNextLevelClicked();
                 }else if(v.getId() == R.id.btnReintentar) {
-                    game.restartLevel();
+                    game.onRestartLevelClicked();
                 }
                 dismiss();
             }
@@ -81,8 +81,8 @@ public class DialogLevel extends DialogFragment {
     }
 
     public interface OnDialogInteractionListener {
-        void nextLevel();
-        void restartLevel();
+        void onNextLevelClicked();
+        void onRestartLevelClicked();
     }
 
 }

@@ -24,25 +24,24 @@ import org.fransis.game.words.words.R;
 public class GameFragment extends Fragment implements GameCallback {
 
     public static final String SCORE_FORMAT = "%1d";
-    LinearLayout hudAttempts = null;
-    TextView hudAttemptsText = null;
-    TextView hudScore = null;
-    ArrayAdapter<String> adapterResult = null;
-    ArrayAdapter<String> adapter = null;
-    GridView gridviewResult = null;
-    Game myGame = null;
-    Player player = null;
-    GridView gridview = null;
-    LevelRepository levels = null;
-    TextView tvCurrent = null;
-    AnimationSet animationIn = null;
-    AnimationSet animationOut = null;
-    ValueAnimator scoreAnimator = null;
-    Context mContext = null;
-    AdapterView.OnItemClickListener listenerClickChar = null;
-    int lastScore = 0;
-    int prevScore = 0;
-    ValueAnimator.AnimatorUpdateListener listenerScoreAnimation = null;
+    private LinearLayout mHudAttempts = null;
+    private TextView mHudAttemptsText = null;
+    private TextView mHudScore = null;
+    private ArrayAdapter<String> mAdapterResult = null;
+    private ArrayAdapter<String> mAdapter = null;
+    private GridView mGridViewResult = null;
+    private Game mGame = null;
+    private Player mPlayer = null;
+    private GridView mGridView = null;
+    private TextView mTvCurrent = null;
+    private AnimationSet mAnimationIn = null;
+    private AnimationSet mAnimationOut = null;
+    private ValueAnimator mScoreAnimator = null;
+    private Context mContext = null;
+    private AdapterView.OnItemClickListener mListenerClickChar = null;
+    private int mLastScore = 0;
+    private int mPrevScore = 0;
+    private ValueAnimator.AnimatorUpdateListener mListenerScoreAnimation = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,34 +52,29 @@ public class GameFragment extends Fragment implements GameCallback {
         Animation fadeOut = new AlphaAnimation(1, 0);
         fadeOut.setDuration(500);
 
-        listenerScoreAnimation = new ValueAnimator.AnimatorUpdateListener() {
+        mListenerScoreAnimation = new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 String score = String.format(SCORE_FORMAT, (int)animation.getAnimatedValue());
-                hudScore.setText(score);
+                mHudScore.setText(score);
             }
         };
 
-        animationIn = new AnimationSet(false);
-        animationIn.addAnimation(fadeIn);
-        animationOut = new AnimationSet(false);
-        animationOut.addAnimation(fadeOut);
+        mAnimationIn = new AnimationSet(false);
+        mAnimationIn.addAnimation(fadeIn);
+        mAnimationOut = new AnimationSet(false);
+        mAnimationOut.addAnimation(fadeOut);
 
-        levels = new MemoryRepository();
-
-        listenerClickChar = new AdapterView.OnItemClickListener() {
+        mListenerClickChar = new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                tvCurrent = (TextView) v.findViewById(R.id.item_id);
-                String letter = tvCurrent.getText().toString();
+                mTvCurrent = (TextView) v.findViewById(R.id.item_id);
+                String letter = mTvCurrent.getText().toString();
 
-                myGame.newTry(letter);
+                mGame.newTry(letter);
 
             }
         };
-
-        player = new Player();
-        myGame = new Game(levels.getLevel());
 
     }
 
@@ -89,53 +83,40 @@ public class GameFragment extends Fragment implements GameCallback {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View inflate = inflater.inflate(R.layout.fragment_game, container, false);
 
-        gridview = (GridView) inflate.findViewById(R.id.gridview);
-        gridviewResult = (GridView) inflate.findViewById(R.id.gridview_result);
-        hudAttempts = (LinearLayout) inflate.findViewById(R.id.hud_attempts);
-        hudScore = (TextView) inflate.findViewById(R.id.hud_score);
-        hudAttemptsText = (TextView) inflate.findViewById(R.id.hud_attempts_text);
-        gridview.setOnItemClickListener(listenerClickChar);
+        mGridView = (GridView) inflate.findViewById(R.id.gridview);
+        mGridViewResult = (GridView) inflate.findViewById(R.id.gridview_result);
+        mHudAttempts = (LinearLayout) inflate.findViewById(R.id.hud_attempts);
+        mHudScore = (TextView) inflate.findViewById(R.id.hud_score);
+        mHudAttemptsText = (TextView) inflate.findViewById(R.id.hud_attempts_text);
+        mGridView.setOnItemClickListener(mListenerClickChar);
 
-        String score = String.format(SCORE_FORMAT, player.getScore());
-        hudScore.setText(score);
+        String score = String.format(SCORE_FORMAT, mPlayer.getScore());
+        mHudScore.setText(score);
         startLevel();
 
         return inflate;
     }
 
-    public void restartLevel(){
-        Level level = levels.getLevel();
-        myGame = new Game(level);
-        startLevel();
-    }
-
-    public void nextLevel(){
-        Level level = levels.getNextLevel();
-        myGame = new Game(level);
-        startLevel();
-    }
-
-    private void startLevel() {
+    public void startLevel() {
         drawNTry();
-        hudAttempts.setVisibility(View.VISIBLE);
-        String word = myGame.getWord();
-        adapterResult = new ArrayAdapter<>(mContext, R.layout.item, R.id.item_id);
+        mHudAttempts.setVisibility(View.VISIBLE);
+        String word = mGame.getWord();
+        mAdapterResult = new ArrayAdapter<>(mContext, R.layout.item, R.id.item_id);
         for (int i= 0; i< word.length(); i++){
-            adapterResult.add(word.substring(i, i + 1));
+            mAdapterResult.add(word.substring(i, i + 1));
         }
-        gridviewResult.setAdapter(adapterResult);
+        mGridViewResult.setAdapter(mAdapterResult);
 
-        adapter = new ArrayAdapter<>(mContext, R.layout.item, R.id.item_id);
-        String words = myGame.getAlphabet();
+        mAdapter = new ArrayAdapter<>(mContext, R.layout.item, R.id.item_id);
+        String words = mGame.getAlphabet();
         for (int i=0; i<words.length();i++)
-            adapter.add(words.substring(i,i+1));
-        gridview.setAdapter(adapter);
-        gridview.setEnabled(true);
-        myGame.setCallback(this);
+            mAdapter.add(words.substring(i,i+1));
+        mGridView.setAdapter(mAdapter);
+        mGridView.setEnabled(true);
     }
 
     private void drawNTry(){
-        hudAttemptsText.setText(String.format(SCORE_FORMAT,myGame.getNTry()));
+        mHudAttemptsText.setText(String.format(SCORE_FORMAT, mGame.getNTry()));
     }
 
     private void showDialog(DialogFragment dialog){
@@ -159,28 +140,38 @@ public class GameFragment extends Fragment implements GameCallback {
 
     @Override
     public void character(String word) {
-        tvCurrent.setBackgroundResource(R.drawable.good);
-        adapterResult.clear();
+        mTvCurrent.setBackgroundResource(R.drawable.good);
+        mAdapterResult.clear();
         for (int i = 0; i < word.length(); i++) {
-            adapterResult.add(word.substring(i, i + 1));
+            mAdapterResult.add(word.substring(i, i + 1));
         }
     }
 
     @Override
     public void fail(int tryAvailable) {
-        tvCurrent.setBackgroundResource(R.drawable.wrong);
+        mTvCurrent.setBackgroundResource(R.drawable.wrong);
         drawNTry();
     }
 
     @Override
     public void score(int score) {
-        lastScore = score;
-        prevScore = player.getScore();
-        player.addScore(lastScore);
-        scoreAnimator = ValueAnimator.ofInt(prevScore, player.getScore());
-        scoreAnimator.setDuration(1000);
-        scoreAnimator.addUpdateListener(listenerScoreAnimation);
-        scoreAnimator.start();
+        mLastScore = score;
+        mPrevScore = mPlayer.getScore();
+        mPlayer.addScore(mLastScore);
+        mScoreAnimator = ValueAnimator.ofInt(mPrevScore, mPlayer.getScore());
+        mScoreAnimator.setDuration(1000);
+        mScoreAnimator.addUpdateListener(mListenerScoreAnimation);
+        mScoreAnimator.start();
     }
+
+    public void setGame(Game mGame) {
+        this.mGame = mGame;
+        this.mGame.setCallback(this);
+    }
+
+    public void setPlayer(Player mPlayer) {
+        this.mPlayer = mPlayer;
+    }
+
 }
 
