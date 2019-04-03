@@ -97,6 +97,7 @@ public class GameFragment extends Fragment implements GameCallback {
         return inflate;
     }
 
+    // TODO: When resume the game, whe have to fix the alphabet color, because we lost it when the fragment is refreshed.
     public void startLevel() {
         drawNTry();
         mHudAttempts.setVisibility(View.VISIBLE);

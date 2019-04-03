@@ -27,8 +27,9 @@ public class MainMenuFragment extends Fragment implements View.OnClickListener {
     private View mSignOutButtonView;
     private boolean mShowSignInButton = true;
     private TextView mGreetingTextView;
-    private Uri mPlayerPictureUri = null;
-    private String mGreeting;
+    private String mGreeting = "";
+    private boolean mShowResumeGame = false;
+    private Button mResumeButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,8 +46,8 @@ public class MainMenuFragment extends Fragment implements View.OnClickListener {
         play.setOnClickListener(this);
         Button exit = inflate.findViewById(R.id.btn_exit);
         exit.setOnClickListener(this);
-        Button resume = inflate.findViewById(R.id.btn_resume);
-        resume.setOnClickListener(this);
+        mResumeButton = inflate.findViewById(R.id.btn_resume);
+        mResumeButton.setOnClickListener(this);
 
         mGreetingTextView = inflate.findViewById(R.id.text_greeting);
         mSignInButtonView = inflate.findViewById(R.id.sign_in_button);
@@ -80,6 +81,7 @@ public class MainMenuFragment extends Fragment implements View.OnClickListener {
         mGreetingTextView.setText(mGreeting);
         mSignInButtonView.setVisibility(mShowSignInButton ? View.VISIBLE : View.GONE);
         mSignOutButtonView.setVisibility(mShowSignInButton ? View.GONE : View.VISIBLE);
+        mResumeButton.setVisibility(mShowResumeGame ? View.VISIBLE : View.GONE);
     }
 
     public void setShowSignInButton(boolean showSignInButton) {
@@ -112,4 +114,8 @@ public class MainMenuFragment extends Fragment implements View.OnClickListener {
         updateUI();
     }
 
+    public void setShowResumeGame(boolean mShowResumeGame) {
+        this.mShowResumeGame = mShowResumeGame;
+        updateUI();
+    }
 }

@@ -74,6 +74,8 @@ public class MainActivity extends AppCompatActivity implements
         transaction.replace(R.id.fragment_container, mGameFragment);
         transaction.addToBackStack(null);
         transaction.commit();
+        mMainMenuFragment.setShowResumeGame(true);
+
     }
 
     @Override
@@ -83,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onResumeButtonClicked() {
-        if(mGameFragment != null){
+        if(mGame != null){
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_container, mGameFragment);
             transaction.addToBackStack(null);
