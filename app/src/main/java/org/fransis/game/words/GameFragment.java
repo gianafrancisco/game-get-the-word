@@ -28,7 +28,7 @@ public class GameFragment extends Fragment implements GameCallback {
     private TextView mHudAttemptsText = null;
     private TextView mHudScore = null;
     private ArrayAdapter<String> mAdapterResult = null;
-    private ArrayAdapter<String> mAdapter = null;
+    private AlphabetAdapter mAdapter = null;
     private GridView mGridViewResult = null;
     private Game mGame = null;
     private Player mPlayer = null;
@@ -72,7 +72,6 @@ public class GameFragment extends Fragment implements GameCallback {
                 String letter = mTvCurrent.getText().toString();
 
                 mGame.newTry(letter);
-
             }
         };
 
@@ -97,7 +96,6 @@ public class GameFragment extends Fragment implements GameCallback {
         return inflate;
     }
 
-    // TODO: When resume the game, whe have to fix the alphabet color, because we lost it when the fragment is refreshed.
     public void startLevel() {
         drawNTry();
         mHudAttempts.setVisibility(View.VISIBLE);
@@ -107,11 +105,8 @@ public class GameFragment extends Fragment implements GameCallback {
             mAdapterResult.add(word.substring(i, i + 1));
         }
         mGridViewResult.setAdapter(mAdapterResult);
+        mAdapter = new AlphabetAdapter(mContext, mGame.getAlphabetStatus());
 
-        mAdapter = new ArrayAdapter<>(mContext, R.layout.item, R.id.item_id);
-        String words = mGame.getAlphabet();
-        for (int i=0; i<words.length();i++)
-            mAdapter.add(words.substring(i,i+1));
         mGridView.setAdapter(mAdapter);
         mGridView.setEnabled(true);
     }
@@ -141,7 +136,7 @@ public class GameFragment extends Fragment implements GameCallback {
 
     @Override
     public void character(String word) {
-        mTvCurrent.setBackgroundResource(R.drawable.good);
+        mAdapter.notifyDataSetChanged();
         mAdapterResult.clear();
         for (int i = 0; i < word.length(); i++) {
             mAdapterResult.add(word.substring(i, i + 1));
@@ -150,7 +145,7 @@ public class GameFragment extends Fragment implements GameCallback {
 
     @Override
     public void fail(int tryAvailable) {
-        mTvCurrent.setBackgroundResource(R.drawable.wrong);
+        mAdapter.notifyDataSetChanged();
         drawNTry();
     }
 
