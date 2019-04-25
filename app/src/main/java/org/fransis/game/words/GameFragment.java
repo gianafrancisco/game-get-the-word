@@ -34,6 +34,7 @@ public class GameFragment extends Fragment implements GameCallback {
     private Player mPlayer = null;
     private GridView mGridView = null;
     private TextView mTvCurrent = null;
+    private TextView mTvDefinition = null;
     private AnimationSet mAnimationIn = null;
     private AnimationSet mAnimationOut = null;
     private ValueAnimator mScoreAnimator = null;
@@ -86,6 +87,7 @@ public class GameFragment extends Fragment implements GameCallback {
         mGridViewResult = (GridView) inflate.findViewById(R.id.gridview_result);
         mHudAttempts = (LinearLayout) inflate.findViewById(R.id.hud_attempts);
         mHudScore = (TextView) inflate.findViewById(R.id.hud_score);
+        mTvDefinition = (TextView) inflate.findViewById(R.id.textview_definition);
         mHudAttemptsText = (TextView) inflate.findViewById(R.id.hud_attempts_text);
         mGridView.setOnItemClickListener(mListenerClickChar);
 
@@ -98,6 +100,7 @@ public class GameFragment extends Fragment implements GameCallback {
 
     public void startLevel() {
         drawNTry();
+        mTvDefinition.setText(mGame.getLevelDefinition());
         mHudAttempts.setVisibility(View.VISIBLE);
         String word = mGame.getWord();
         mAdapterResult = new ArrayAdapter<>(mContext, R.layout.item, R.id.item_id);

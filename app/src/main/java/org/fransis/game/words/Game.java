@@ -172,5 +172,9 @@ public class Game {
             throw new RuntimeException("Callback is null");
 
     }
+
+    public String getLevelDefinition(){
+        return mCurrent.getDefinition();
+    }
 }
 

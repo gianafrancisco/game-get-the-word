@@ -11,16 +11,16 @@ public class MemoryRepository implements LevelRepository {
     public MemoryRepository (){
         level = 0;
         levels = new ArrayList<>();
-        levels.add(new Level(Level.DEFAULT_ALPHABET, "Chucrut".toUpperCase()));
-        levels.add(new Level(Level.DEFAULT_ALPHABET, "Amor".toUpperCase()));
-        levels.add(new Level(Level.DEFAULT_ALPHABET, "Auto".toUpperCase()));
-        levels.add(new Level(Level.DEFAULT_ALPHABET, "Perro".toUpperCase()));
-        levels.add(new Level(Level.DEFAULT_ALPHABET, "Musica".toUpperCase()));
-        levels.add(new Level(Level.DEFAULT_ALPHABET, "Pajaro".toUpperCase()));
-        levels.add(new Level(Level.DEFAULT_ALPHABET, "Expensa".toUpperCase()));
-        levels.add(new Level(Level.DEFAULT_ALPHABET, "Paisaje".toUpperCase()));
-        levels.add(new Level(Level.DEFAULT_ALPHABET, "Televisor".toUpperCase()));
-        levels.add(new Level(Level.DEFAULT_ALPHABET, "Matematica".toUpperCase()));
+        levels.add(new Level(Level.DEFAULT_ALPHABET, "Chucrut".toUpperCase(),"Salchichas con ...."));
+        levels.add(new Level(Level.DEFAULT_ALPHABET, "Amor".toUpperCase(), ""));
+        levels.add(new Level(Level.DEFAULT_ALPHABET, "Auto".toUpperCase(), ""));
+        levels.add(new Level(Level.DEFAULT_ALPHABET, "Perro".toUpperCase(), ""));
+        levels.add(new Level(Level.DEFAULT_ALPHABET, "Musica".toUpperCase(), ""));
+        levels.add(new Level(Level.DEFAULT_ALPHABET, "Pajaro".toUpperCase(), ""));
+        levels.add(new Level(Level.DEFAULT_ALPHABET, "Expensa".toUpperCase(), ""));
+        levels.add(new Level(Level.DEFAULT_ALPHABET, "Paisaje".toUpperCase(), ""));
+        levels.add(new Level(Level.DEFAULT_ALPHABET, "Televisor".toUpperCase(), ""));
+        levels.add(new Level(Level.DEFAULT_ALPHABET, "Matematica".toUpperCase(), ""));
 
     }
 

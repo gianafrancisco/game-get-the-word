@@ -105,13 +105,15 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onNextLevelClicked() {
-        mGame.reset(mLevelRepository.getNextLevel());
+        Level level = mLevelRepository.getNextLevel();
+        mGame.reset(level);
         mGameFragment.startLevel();
     }
 
     @Override
     public void onRestartLevelClicked() {
-        mGame.reset(mLevelRepository.getLevel());
+        Level level = mLevelRepository.getLevel();
+        mGame.reset(level);
         mGameFragment.startLevel();
     }
 
