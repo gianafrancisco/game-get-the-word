@@ -40,6 +40,16 @@
             android:layout_margin="10dp"/>
 
         <Button
+            android:id="@+id/btn_leaderboard"
+            android:layout_width="200dp"
+            android:background="@drawable/good"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:text="@string/show_leaderboard"
+            android:layout_margin="10dp"/>
+
+
+        <Button
             android:id="@+id/btn_exit"
             android:layout_width="200dp"
             android:background="@drawable/wrong"

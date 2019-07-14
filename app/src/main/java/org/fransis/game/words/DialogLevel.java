@@ -18,7 +18,6 @@ public class DialogLevel extends DialogFragment {
 
     View.OnClickListener btnListener = null;
     Game game;
-    LevelRepository levelRepository;
     int dialogType = 0;
 
     public static DialogLevel newInstance(int type) {

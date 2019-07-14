@@ -16,4 +16,6 @@
     <string name="sign_in">Conectar</string>
     <string name="greeting_msg">Bienvenido, username!</string>
     <string name="greeting_welcome">Bienvenido</string>
+    <string name="leaderboard_id">CgkIqKKc4N0KEAIQBw</string>
+    <string name="show_leaderboard">Tabla de posiciones</string>
 </resources>

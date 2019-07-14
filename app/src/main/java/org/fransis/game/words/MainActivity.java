@@ -15,26 +15,36 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.games.AnnotatedData;
 import com.google.android.gms.games.Games;
+import com.google.android.gms.games.LeaderboardsClient;
 import com.google.android.gms.games.Player;
 import com.google.android.gms.games.PlayersClient;
+import com.google.android.gms.games.leaderboard.LeaderboardScore;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import org.fransis.game.words.words.R;
 
+import static com.google.android.gms.games.leaderboard.LeaderboardVariant.COLLECTION_PUBLIC;
+import static com.google.android.gms.games.leaderboard.LeaderboardVariant.TIME_SPAN_ALL_TIME;
+
 public class MainActivity extends AppCompatActivity implements
         MainMenuFragment.OnFragmentInteractionListener,
-        DialogLevel.OnDialogInteractionListener {
+        DialogLevel.OnDialogInteractionListener,
+        GameFragment.OnGameInteractionListener {
 
     private MainMenuFragment mMainMenuFragment = null;
     private GameFragment mGameFragment = null;
     private GoogleSignInClient mGoogleSignInClient;
     private PlayersClient mPlayersClient;
+    private LeaderboardsClient mLeaderboardClient;
     private String mGreetingMsg;
     // request codes we use when invoking an external activity
     private static final int RC_UNUSED = 5001;
     private static final int RC_SIGN_IN = 9001;
+    private static final int RC_LEADERBOARD_UI = 9004;
     private static final String TAG = "GAME";
     private Game mGame;
     private LevelRepository mLevelRepository;
@@ -101,6 +111,17 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onSignOutButtonClicked() {
         signOut();
+    }
+
+    @Override
+    public void onShowLeaderboardClicked() {
+        mLeaderboardClient.getLeaderboardIntent(getString(R.string.leaderboard_id))
+                .addOnSuccessListener(new OnSuccessListener<Intent>() {
+                    @Override
+                    public void onSuccess(Intent intent) {
+                        startActivityForResult(intent, RC_LEADERBOARD_UI);
+                    }
+                });
     }
 
     @Override
@@ -176,6 +197,7 @@ public class MainActivity extends AppCompatActivity implements
 
         // Show sign-in button on main menu
         mMainMenuFragment.setShowSignInButton(true);
+        mMainMenuFragment.setShowLeaderboardButton(false);
         mMainMenuFragment.setGreeting("");
     }
 
@@ -186,6 +208,9 @@ public class MainActivity extends AppCompatActivity implements
 
         // Show sign-out button on main menu
         mMainMenuFragment.setShowSignInButton(false);
+        mMainMenuFragment.setShowLeaderboardButton(true);
+
+        mLeaderboardClient = Games.getLeaderboardsClient(this, GoogleSignIn.getLastSignedInAccount(this));
 
         // Set the greeting appropriately on main menu
         mPlayersClient.getCurrentPlayer()
@@ -204,7 +229,17 @@ public class MainActivity extends AppCompatActivity implements
                         mMainMenuFragment.setGreeting(mGreetingMsg + ", " + displayName);
                     }
                 });
-
+        /*
+        TODO: Load current score from player.
+        mLeaderboardClient.loadCurrentPlayerLeaderboardScore(getString(R.string.leaderboard_id), TIME_SPAN_ALL_TIME,  COLLECTION_PUBLIC)
+                .addOnSuccessListener(this, new OnSuccessListener<AnnotatedData<LeaderboardScore>>() {
+                    @Override
+                    public void onSuccess(AnnotatedData<LeaderboardScore> leaderboardScoreAnnotatedData) {
+                        long score = leaderboardScoreAnnotatedData.get().getRawScore();
+                        // mPlayer.addScore(score);
+                    }
+        });
+        */
     }
 
     private void handleException(Exception e, String details) {
@@ -249,4 +284,8 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+    @Override
+    public void onUpdateScore(long score) {
+        mLeaderboardClient.submitScore(getString(R.string.leaderboard_id), score);
+    }
 }

@@ -1,7 +1,6 @@
 package org.fransis.game.words;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -20,12 +19,15 @@ public class MainMenuFragment extends Fragment implements View.OnClickListener {
         void onResumeButtonClicked();
         void onSignInButtonClicked();
         void onSignOutButtonClicked();
+        void onShowLeaderboardClicked();
     }
 
     private OnFragmentInteractionListener mListener;
     private View mSignInButtonView;
     private View mSignOutButtonView;
+    private View mShowLeaderboardButtonView;
     private boolean mShowSignInButton = true;
+    private boolean mShowLeaderboardButton = false;
     private TextView mGreetingTextView;
     private String mGreeting = "";
     private boolean mShowResumeGame = false;
@@ -51,10 +53,11 @@ public class MainMenuFragment extends Fragment implements View.OnClickListener {
 
         mGreetingTextView = inflate.findViewById(R.id.text_greeting);
         mSignInButtonView = inflate.findViewById(R.id.sign_in_button);
+        mSignInButtonView.setOnClickListener(this);
         mSignOutButtonView = inflate.findViewById(R.id.sign_out_button);
-
-        inflate.findViewById(R.id.sign_in_button).setOnClickListener(this);
-        inflate.findViewById(R.id.sign_out_button).setOnClickListener(this);
+        mSignOutButtonView.setOnClickListener(this);
+        mShowLeaderboardButtonView = inflate.findViewById(R.id.btn_leaderboard);
+        mShowLeaderboardButtonView.setOnClickListener(this);
 
         updateUI();
         return inflate;
@@ -82,6 +85,7 @@ public class MainMenuFragment extends Fragment implements View.OnClickListener {
         mSignInButtonView.setVisibility(mShowSignInButton ? View.VISIBLE : View.GONE);
         mSignOutButtonView.setVisibility(mShowSignInButton ? View.GONE : View.VISIBLE);
         mResumeButton.setVisibility(mShowResumeGame ? View.VISIBLE : View.GONE);
+        mShowLeaderboardButtonView.setVisibility(mShowLeaderboardButton ? View.VISIBLE : View.GONE);
     }
 
     public void setShowSignInButton(boolean showSignInButton) {
@@ -107,6 +111,9 @@ public class MainMenuFragment extends Fragment implements View.OnClickListener {
             case R.id.sign_out_button:
                 mListener.onSignOutButtonClicked();
                 break;
+            case R.id.btn_leaderboard:
+                mListener.onShowLeaderboardClicked();
+                break;
         }
     }
     public void setGreeting(String greeting) {
@@ -116,6 +123,11 @@ public class MainMenuFragment extends Fragment implements View.OnClickListener {
 
     public void setShowResumeGame(boolean mShowResumeGame) {
         this.mShowResumeGame = mShowResumeGame;
+        updateUI();
+    }
+
+    public void setShowLeaderboardButton(boolean mShowLeaderboardButton) {
+        this.mShowLeaderboardButton = mShowLeaderboardButton;
         updateUI();
     }
 }

@@ -39,14 +39,16 @@ public class GameFragment extends Fragment implements GameCallback {
     private ValueAnimator mScoreAnimator = null;
     private Context mContext = null;
     private AdapterView.OnItemClickListener mListenerClickChar = null;
-    private int mLastScore = 0;
-    private int mPrevScore = 0;
+    private long mLastScore = 0;
+    private long mPrevScore = 0;
     private ValueAnimator.AnimatorUpdateListener mListenerScoreAnimation = null;
+    private OnGameInteractionListener mGameActivityInteract;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = getActivity().getApplicationContext();
+        mGameActivityInteract = ((OnGameInteractionListener)getActivity());
         Animation fadeIn = new AlphaAnimation(0, 1);
         fadeIn.setDuration(1000);
         Animation fadeOut = new AlphaAnimation(1, 0);
@@ -154,7 +156,8 @@ public class GameFragment extends Fragment implements GameCallback {
         mLastScore = score;
         mPrevScore = mPlayer.getScore();
         mPlayer.addScore(mLastScore);
-        mScoreAnimator = ValueAnimator.ofInt(mPrevScore, mPlayer.getScore());
+        mGameActivityInteract.onUpdateScore(mPlayer.getScore());
+        mScoreAnimator = ValueAnimator.ofInt((int)mPrevScore, (int)mPlayer.getScore());
         mScoreAnimator.setDuration(1000);
         mScoreAnimator.addUpdateListener(mListenerScoreAnimation);
         mScoreAnimator.start();
@@ -167,6 +170,10 @@ public class GameFragment extends Fragment implements GameCallback {
 
     public void setPlayer(Player mPlayer) {
         this.mPlayer = mPlayer;
+    }
+
+    public interface OnGameInteractionListener {
+        void onUpdateScore(long score);
     }
 
 }
