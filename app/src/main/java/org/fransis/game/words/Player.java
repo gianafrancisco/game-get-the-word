@@ -13,4 +13,12 @@ public class Player {
         }
         return this.score;
     }
+
+    public Player() {
+        this(0);
+    }
+
+    public Player(long score) {
+        this.score = score;
+    }
 }

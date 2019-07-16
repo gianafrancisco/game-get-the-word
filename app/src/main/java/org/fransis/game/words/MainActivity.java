@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements
     private MainMenuFragment mMainMenuFragment = null;
     private GameFragment mGameFragment = null;
     private GoogleSignInClient mGoogleSignInClient;
-    private PlayersClient mPlayersClient;
+    private PlayersClient mPlayersClient = null;
     private LeaderboardsClient mLeaderboardClient;
     private String mGreetingMsg;
     // request codes we use when invoking an external activity
@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements
 
         mMainMenuFragment = new MainMenuFragment();
         mGameFragment = new GameFragment();
+        mPlayer = new org.fransis.game.words.Player(0);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -75,7 +76,6 @@ public class MainActivity extends AppCompatActivity implements
     public void onPlayButtonClicked() {
 
         mLevelRepository = new MemoryRepository();
-        mPlayer = new org.fransis.game.words.Player();
         mGame = new Game(mLevelRepository.getLevel());
         mGameFragment.setGame(mGame);
         mGameFragment.setPlayer(mPlayer);
@@ -199,6 +199,7 @@ public class MainActivity extends AppCompatActivity implements
         mMainMenuFragment.setShowSignInButton(true);
         mMainMenuFragment.setShowLeaderboardButton(false);
         mMainMenuFragment.setGreeting("");
+        mPlayer = new org.fransis.game.words.Player(0);
     }
 
     private void onConnected(GoogleSignInAccount googleSignInAccount) {
@@ -229,17 +230,15 @@ public class MainActivity extends AppCompatActivity implements
                         mMainMenuFragment.setGreeting(mGreetingMsg + ", " + displayName);
                     }
                 });
-        /*
-        TODO: Load current score from player.
+
         mLeaderboardClient.loadCurrentPlayerLeaderboardScore(getString(R.string.leaderboard_id), TIME_SPAN_ALL_TIME,  COLLECTION_PUBLIC)
                 .addOnSuccessListener(this, new OnSuccessListener<AnnotatedData<LeaderboardScore>>() {
                     @Override
                     public void onSuccess(AnnotatedData<LeaderboardScore> leaderboardScoreAnnotatedData) {
                         long score = leaderboardScoreAnnotatedData.get().getRawScore();
-                        // mPlayer.addScore(score);
+                        mPlayer = new org.fransis.game.words.Player(score);
                     }
         });
-        */
     }
 
     private void handleException(Exception e, String details) {
@@ -286,6 +285,9 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onUpdateScore(long score) {
-        mLeaderboardClient.submitScore(getString(R.string.leaderboard_id), score);
+        // TODO validate if we are online
+        if(mPlayersClient != null) {
+            mLeaderboardClient.submitScore(getString(R.string.leaderboard_id), score);
+        }
     }
 }
