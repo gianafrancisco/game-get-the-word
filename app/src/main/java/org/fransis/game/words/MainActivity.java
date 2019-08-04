@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity implements
     private LeaderboardsClient mLeaderboardClient;
     private String mGreetingMsg;
     // request codes we use when invoking an external activity
-    private static final int RC_UNUSED = 5001;
     private static final int RC_SIGN_IN = 9001;
     private static final int RC_LEADERBOARD_UI = 9004;
     private static final String TAG = "GAME";
